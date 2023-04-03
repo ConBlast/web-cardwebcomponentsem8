@@ -6,10 +6,18 @@ export default class CardNFT extends HTMLElement {
   }
 
   connectedCallback() {
-    this.render();
+    this.getData();
   }
 
-  render() {
+  async getData() {
+    const response = await fetch('https://nftproducts.free.beeceptor.com/nfts');
+    const data = await response.json();
+    const product = data.products[0];
+
+    this.render(product);
+  }
+
+  render(product) {
     const template = document.createElement('template');
     template.innerHTML = `
     <style>
@@ -65,10 +73,13 @@ export default class CardNFT extends HTMLElement {
 
   <article class="card">
     <div class="card-content">
-      <img src="${this.getAttribute('imageSrc')}" class="img" />
+      <img src="${product.url}" class="img" />
       <div class="descripcion">
-        <h2>${this.getAttribute('name')}</h2>
-        <p>${this.getAttribute('description')}</p>
+        <h2>${product.name}</h2>
+        <h2>Collection:${product.collection}</h2>
+        <p>${product.description}</p>
+        <p>Cryptocurrency:${product.cryptocurrency}</p>
+        <p>Price:${product.price}</p>
       </div>
     </div>
   </article>
